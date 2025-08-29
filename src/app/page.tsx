@@ -1,3 +1,4 @@
+import data from "@/app/example-data.json";
 import HierarchyTable from "@/components/HierarchyTable";
 import {
   buildTree,
@@ -5,7 +6,6 @@ import {
   parseUnknownToRawRecords,
 } from "@/lib/transform";
 import type { RawRecord } from "@/lib/types";
-import data from "../../example-data.json";
 
 export default function Home() {
   const raw = parseUnknownToRawRecords(data as unknown);
@@ -13,7 +13,7 @@ export default function Home() {
   const columns = collectAllColumns(tree);
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen">
       <HierarchyTable initialTree={tree} columns={columns} />
     </div>
   );

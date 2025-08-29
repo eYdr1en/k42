@@ -47,6 +47,30 @@ export function collectAllColumns(tree: Tree): string[] {
   return Array.from(columnSet);
 }
 
+export function collectColumnsForNodes(nodes: TreeNode[]): string[] {
+  const columnSet = new Set<string>();
+  for (const node of nodes) {
+    for (const key of Object.keys(node.data)) columnSet.add(key);
+  }
+  return Array.from(columnSet);
+}
+
+export function collectColumnsByDepth(tree: Tree): Record<number, string[]> {
+  const depthToColumns = new Map<number, Set<string>>();
+  const visit = (node: TreeNode) => {
+    const set = depthToColumns.get(node.depth) ?? new Set<string>();
+    for (const key of Object.keys(node.data)) set.add(key);
+    depthToColumns.set(node.depth, set);
+    for (const child of node.children) visit(child);
+  };
+  for (const node of tree) visit(node);
+  const result: Record<number, string[]> = {};
+  for (const [depth, set] of depthToColumns.entries()) {
+    result[depth] = Array.from(set);
+  }
+  return result;
+}
+
 export function pruneTreeByUids(tree: Tree, uidsToRemove: Set<string>): Tree {
   const prune = (nodes: Tree): Tree => {
     const result: Tree = [];
